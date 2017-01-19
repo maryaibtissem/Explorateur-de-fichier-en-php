@@ -1,5 +1,65 @@
 body{
+margin:0;
+padding: 0;
+background-color: #D6D6D6;    
+
+}
+
+
+#centre
+{
+padding: 20px;
+background-color: #69909F;   
+ 
+height: 800px;  
+margin-top: 80px;      
+}
+
+
+.article{
+padding:20px;
    
-   
+margin-left: 10px; 
+margin-top: 40px;    
+background-color:  #D6D6D6;    
     
 }
+
+
+a {
+text-decoration: none; 
+color: black;
+}
+
+
+header{
+background-color: #D6D6D6;
+height: 50px;
+color:black;
+text-align: center;
+     
+    
+}
+
+
+ ul li
+{
+list-style-type: none;
+}
+
+#titre
+{
+float: left;
+font-size:20px; 
+color:#69909F;
+margin-top: 20px;
+padding-left: 20px;
+}
+
+#dossier
+{
+float: left;  
+}
+
+
+

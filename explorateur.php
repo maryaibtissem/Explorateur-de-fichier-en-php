@@ -3,51 +3,194 @@
 <html>
    
     <head>
-         <meta charset="utf-8"> 
+        
+        <meta charset="utf-8"> 
+        <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="style.css">
+        
+   
     </head>
     <body>
         
-    <header></header>  
-    <h1>Explorateur de fichier </h1>    
-    <?php
+    
+          
+        <div class="container">
+        <section class="row">
+         
+        <header class="col-lg-12"  > <img id="dossier" width="60" src ="dossier-icone-8757-128.png"> <p id="titre"> Explorateur de fichier </p></header>
+        <div id="centre">
+            
         
+    <?php
+
+        $k="";
         $slash = "\\";
     
-        $chemin = realpath("explorateur.php");
+        $chemin = realpath("explorateur.php"); 
         $chemin = str_replace("explorateur.php","",$chemin);
+       
+         
         
         if(isset($_GET["chemin"])) 
         { 
-          $adresse= $_GET["chemin"];
-        }
-            else
-        { 
-             $adresse= $chemin."image".$slash;
-        }
-       
-       
-        $a = scandir ($adresse);
-//        print_r($a);
-      
-            foreach ($a as $Fichier) 
-            {  
-                if(is_dir($adresse.$Fichier))
+            $adresse = $_GET["chemin"];
+//       
+            $adresse = str_replace($chemin,"",$adresse);
+          
+            $phrase= explode("\\",$adresse);
+            $phrase = array_filter($phrase);
+           //echo $mot[0]; 
+           //echo $mot[1];
+            echo'<fieldset><legend><i class="fa fa-folder-open" aria-hidden="true"></i>&nbsp';
+            foreach ($phrase as $key => $mot)
             {
+                if ($mot == end($phrase))
+              {
+                  
+                  $k .=$mot; 
+                  echo '<a href="explorateur.php?chemin='.$k.$slash.'"> '.$mot.' </a>';
+                  
+              }
+                else
+                {
+                    $k .=$mot.$slash; 
+                    echo '<a  href="explorateur.php?chemin='.$k.$slash.'"> '.$mot.'&#8594; </a>';
+                }
+        
+               
+            }  
+           echo '</legend><br>';
+           
             
-                  if ($Fichier != "." && $Fichier != "..") 
+ 
+        }
+        else
+        { 
+            $adresse= $chemin."image".$slash;
+            $mot= explode($slash,$adresse);
+            $adresse = str_replace($chemin,"",$adresse);
+          
+              
+
+            echo'<fieldset><legend> <i class="fa fa-folder-open" aria-hidden="true"></i>&nbsp; <a href=" explorateur.php?chemin='.$mot[4].'" " >'.$mot[4].' </a>   </legend><br>';
+  
+        }
+            
+        ?>
+    <ul id="menu" class=" col-lg-12 ">
+            <li class="col-lg-4">     Nom   </li>
+            <li class="col-lg-4">    Type   </li>
+            <li class="col-lg-4">   Taille  </li>
+                                
+    </ul>
+    <?php
+       
+//        // print_r($a);
+  
+       $a = scandir ($adresse);
+        foreach ($a as $Fichier) 
+        { 
+            if(is_dir($adresse.$Fichier))
+            {   
+            
+                if ($Fichier != "." && $Fichier != "..") 
                 {  
-                
-                echo '<a href="explorateur.php?chemin='.$adresse.$Fichier.$slash.'" target="_blank" ">'.$Fichier.'</a> <br>';
              
+                    ?> 
+                    <div class="article col-lg-12"> 
+                    <?php echo '<i class="fa fa-folder" aria-hidden="true"></i> &nbsp; <a href="explorateur.php?chemin='.$adresse.$Fichier.$slash.'"  ">'.$Fichier.'</a> <br> ';
+                            
+                        ?>
+                   
+                    </div> <?php 
+
+               
                 }
                 
-            }
+            } 
+            else
+               
+                 {
+                  
+                    $info = new SplFileInfo($adresse.$Fichier);
+//                  var_dump($info->getFilename());
+//                  var_dump($info-> getExtension());
+//                  echo filesize($info);
+//               
+                     if($info-> getExtension() =='jpg'|| $info-> getExtension() =='jpeg' || $info-> getExtension() =='png'  )
+          
+                        {  ?> 
+                            <div class="article"><?php
+                          
+                            echo '<div  class="col-lg-4"><i class="fa fa-picture-o" aria-hidden="true"></i> &nbsp;<a  href="'.$adresse.$Fichier.'"> '.$info->getFilename().' </a> </div>'; 
+                                
+                            echo '<p class="col-lg-4">'.$info-> getExtension().'</p>';
+                            echo '<p class="col-lg-4">'.filesize($info).' octets</p> <br>';   
+                                ?>
+                   
+                                
+                            </div> <?php 
+                                 
+                        }
+                     else 
+                        { 
+                            if($info-> getExtension() =='php')
+                            {?> 
+                            <div class="article">
+                            <?php
+                                
+                           
+                                echo '<div  class="col-lg-4"><i class="fa fa-file-text-o" aria-hidden="true"></i> &nbsp;<a  href="telecharger.php?nom_fichier='.$chemin.$adresse.$Fichier.'"> '.$info->getFilename().' </a> </div>  ';  
+                            echo '<p class="col-lg-4">'.$info-> getExtension().'</p>';
+                            echo '<p class="col-lg-4">'.filesize($info).' octets</p> <br>';    
+                                
+                            ?>
+                   
+                                
+                            </div> <?php
+                            
+                            } else
+                                {
+                                    if($info-> getExtension() =='zip')
+                                    {?> 
+                                        <div class="article">
+                                        <?php
+                                        echo '<div  class="col-lg-4"><i class="fa fa-file-archive-o" aria-hidden="true"></i> &nbsp;<a  href="telecharger.php?nom_fichier='.$chemin.$adresse.$Fichier.'"> '.$info->getFilename().' </a> </div>  ';  
+                                        echo '<p class="col-lg-4">'.$info-> getExtension().'</p>';
+                                        echo '<p class="col-lg-4">'.filesize($info).' octets</p> <br>';   ?>
+                   
+                                
+                                        </div> <?php
+                                        
+                                        
+                                    }
+                            
+                                }
+                            
+                            
+                            
+                        }
+                    
+                     
+                     
+                 }
   
        }
+        
+   
     ?>
-
-
-    
+        </div>
+        </section>
+        </div> 
+        <div id="content"></div>
+   
+        <script
+            src="https://code.jquery.com/jquery-3.1.1.js"
+            integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+            crossorigin="anonymous">
+        </script>
+        <script src="script.js"></script>
+            
     </body>
 </html>
